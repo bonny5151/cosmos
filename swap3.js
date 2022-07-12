@@ -1,29 +1,4 @@
-lib = { s : require("@cosmjs/proto-signing"),
-        g : require("@cosmjs/stargate"),
-       e :  require("@cosmjs/encoding"),
-      a : require("@cosmjs/amino"),
-     osmojs : require("osmojs")
- }
-
-function getfee(gaslimit=100000, gasprice="0.025", token="uosmo") {
-   return lib.g.calculateFee(gaslimit, lib.g.GasPrice.fromString(gasprice + token))
-} 
-function coins(amount, token) {
-  return lib.a(amount, token)
-}
-async function walletfromkey(key, chain="cosmos") {
-var key = lib.e.fromBase64(key)
-var w = await lib.s.DirectSecp256k1Wallet.fromKey(key)
-return w
-}
-
-async function connectrpc(rpcurl, wallet, chain="cosmos")
-{
-    if(chain != "cosmos") {
-      return lib.osmojs.getSigningOsmosisClient({rpcEndpoint:rpcurl, signer: wallet})
-   }
-   return lib.g.SigningStargateClient.connectWithSigner(rpcurl, wallet)
-}
+require("./load.js")
 key = "G9KxuXlDbM7wj0YRu8ahAOIuVbJjIVBcweNSjPWFfwg="
 
 w =await walletfromkey(key)

@@ -9,7 +9,7 @@ function getfee(gaslimit=100000, gasprice="0.025", token="uosmo") {
    return lib.g.calculateFee(gaslimit, lib.g.GasPrice.fromString(gasprice + token))
 } 
 function coins(amount, token) {
-  return lib.a(amount, token)
+  return lib.a.coin(amount, token)
 }
 async function walletfromkey(key, chain="cosmos") {
 var key = lib.e.fromBase64(key)
