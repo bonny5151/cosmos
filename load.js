@@ -9,11 +9,22 @@ function getfee(gaslimit=100000, gasprice="0.025", token="uosmo") {
    return lib.g.calculateFee(gaslimit, lib.g.GasPrice.fromString(gasprice + token))
 } 
 function coins(amount, token) {
-  return lib.a.coin(amount, token)
+  return lib.a.coins(amount, token)
 }
 async function walletfromkey(key, chain="cosmos") {
-var key = lib.e.fromBase64(key)
-var w = await lib.s.DirectSecp256k1Wallet.fromKey(key, chain)
+var key;
+var w;
+if(key.indexOf(" ") >=0) {
+ if(chain != 'cosmos') { chain = {prefix: chain}};
+
+  w = await lib.s.DirectSecp256k1HdWallet.fromMnemonic(key, chain)
+  adr = await w.getAccounts()
+  w.address = adr[0].address
+} else {
+key  = lib.e.fromBase64(key)
+
+ w = await lib.s.DirectSecp256k1Wallet.fromKey(key, chain)
+}
 return w
 }
 
