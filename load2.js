@@ -17,6 +17,6 @@ var wallet21 = await walletfromkey(key2)
 
 var conn2 = await connectrpc(wallet2)
 var conn21 = await connectrpc(wallet21)
-//v = await swaposmosis(c3, buyustwithosmocroute, coins(10000,"uosmo"), "1")
+//v = await swaposmosis(c3, buyustcwithosmoroute, coins(10000,"uosmo"), "1")
 //v = await sendibctokens(c3,w31.address, coins(10, ibctokens.atom), "channel-0")
 //v = await sendtokens(c3,wallet2.address, coins(10, ibctokens.ustc))
