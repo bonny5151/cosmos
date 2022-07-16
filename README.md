@@ -5,7 +5,9 @@ node
 .load load2.js
 
 
-//v = await swaposmosis(c3, buyustcwithosmoroute, coins(100,"uosmo"), "1")
+//v = await swaposmosis(c3, getroute(['osmo','ustc']), coins(100,"uosmo"), "1")
+
+// v = await swaposmosis(c3,getroute(["usdc","osmo","ustc"]),coins(10,ibctokens.usdc),"1")
 
 //v = await sendibctokens(c3,w31.address, coins(10, ibctokens.atom), "channel-0")
 
