@@ -3,9 +3,17 @@
 keys in ../k.js 
 
 binancek1 =" "
+
+
 binancek2 = " "
+
+
 terrak1 = " "
+
+
 cosmk1 = " "
+
+
 cosmk2 = " "
 
 
