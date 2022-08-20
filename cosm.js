@@ -91,6 +91,11 @@ connectrpc: async function connectrpc(wallet, rpcurl)
    if(!rpcurl) {rpcurl = cosmrpc;}
    return cosmlib.g.SigningStargateClient.connectWithSigner(rpcurl, wallet)
 },
+connectterra: async function(terrawallet1) {
+ var t = await cosmlib.g.SigningStargateClient.connectWithSigner("https://terra-rpc.easy2stake.com:443",terrawallet1)
+ t.address = terrawallet1.key.accAddress
+ return t
+} , 
 getfeetoken: function getfeetoken(connection) {
   var address = connection.address ? connection.address: connection.signer.address
   address = address.toLowerCase()
@@ -104,12 +109,12 @@ sendibctokens: async function sendibctokens(connection, toaddress, tokens, destc
  return connection.sendIbcTokens(connection.signer.address, toaddress, tokens, "transfer", destchannel, "", Math.floor(Date.now() / 1000) + 60, fee1)
 
 },
-sendtokens: async function sendtokens(connection, toaddress, tokens)
+sendtokens: async function sendtokens(connection, toaddress, tokens, memo="")
 {
   var feetoken = this.getfeetoken(connection)
   var fee1 = this.getfee(100000, "0.025",feetoken)
   tokens = Array.isArray(tokens) ? tokens : [tokens]
-  return connection.sendTokens(connection.signer.address, toaddress, tokens, fee1)
+  return connection.sendTokens(connection.signer.address, toaddress, tokens, fee1, memo)
 },
 swaposmosis: async function swaposmosis(connection, route,inputtokens, minoutputamount)
 {
