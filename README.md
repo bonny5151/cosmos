@@ -28,3 +28,5 @@ https://github.com/cosmos/cosmjs/blob/main/packages/stargate/src/signingstargate
 https://github.com/cosmology-finance/cosmology/tree/master/packages/core#swapexactamountin
 
 https://cosmos.directory/osmosis
+
+http://docs.osmosis.zone/apis
