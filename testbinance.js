@@ -45,3 +45,5 @@ console.log(deposits)
 bal = await gg.getAllBalances(ww.key.accAddress)
 console.log(bal);
 */
+// = await b.lib.findDeposit("atom", "9889F9EAC1F8C4F934CCF12F567E2C38A9EC7A3C72121600250E1B00CECB6EE4")
+//await b.lib.depositHistory("ATOM")

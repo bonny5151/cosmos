@@ -32,3 +32,4 @@ console.log(v)
 //v = await sendibctokens(c3,w31.address, coins(10, ibctokens.atom), "channel-0")
 
 //v = await sendtokens(c3,wallet2.address, coins(10, ibctokens.ustc))
+//d = await cosm.sendtokens(c1,atom.data.address, cosm.coins(10, "uatom"), atom.data.tag)

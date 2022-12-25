@@ -8,7 +8,8 @@
  }
 
 osmorpc = "https://rpc-osmosis.whispernode.com"
-cosmrpc = "https://rpc-cosmoshub.ecostake.com"
+cosmrpc = "https://rpc.cosmos.dragonstake.io"
+//"https://rpc-cosmoshub.ecostake.com"
 
  ibctokens =  {
    atom : "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
@@ -53,8 +54,40 @@ routes = {
   ustc_usdc : getroute(["ustc","osmo","usdc"])
 }
 
+fetch = require("node-fetch")
+
+geturlpath = function(url, ...path) {
+
+url = url + "/" + path.join("/")
+return url .replaceAll("//","/").replace(":/","://")
+
+}
+
+fetchjson = async function(url, ...path) {
+url = geturlpath(url, path)
+return fetch(url,
+    {method: "get", headers: {'Content-Type': 'application/json'}}).then(i=>i.json(), i=>{return {}})
+}
 
 module.exports = {
+
+ poolIDs : {
+  'USTC' : 560,
+  'USDC'  : 678
+},
+
+ paths : {
+  "ustc_osmo": "/tokens/v2/USTC", 
+  "ustc_binance" : "/avgPrice?symbol=USTCBUSD",
+  "ustc_osmo_lcd" : "/osmosis/gamm/v1beta1/pools/560/prices" //{poolId} hardcoded
+},
+
+ urls : {
+  "historical": "https://api-osmosis.imperator.co", //only 1 provider, same as info.osmosis.zone
+  "lcd1" : "https://lcd.osmosis.zone", //lcd has multiple providers and can be run on your own node
+  "lcd2" :  "https://lcd-osmosis.keplr.app",
+  "binance" : "https://api.binance.com/api/v3"
+},
 
 getfee: function getfee(gaslimit=100000, gasprice="0.025", token="uatom") {
    gaslimit = gaslimit ? gaslimit : 100000;
@@ -125,6 +158,13 @@ swaposmosis: async function swaposmosis(connection, route,inputtokens, minoutput
    return connection.signAndBroadcast(addr, [msg], fee1)
 },
 getroute: getroute,
+getpool: async function( poolnum=560,lcdurl="https://lcd.osmosis.zone") {
+  return fetchjson(lcdurl,  "osmosis/gamm/v1beta1/pools/" , poolnum)
+
+},
+getprice: async function( token="ustc", apiurl = "https://api.osmosis.zone") {
+  return fetchjson(apiurl, "/tokens/v2/price/", token)
+} 
 //osmotoustcroute = [{poolId: poolids['osmo/ustc'], tokenOutDenom: ibctokens.ustc}]
 
 
