@@ -58,6 +58,7 @@ fetch = require("node-fetch")
 
 geturlpath = function(url, ...path) {
 
+path = Array.isArray(path[0]) ?  path[0] : path
 url = url + "/" + path.join("/")
 return url .replaceAll("//","/").replace(":/","://")
 
@@ -163,7 +164,7 @@ getpool: async function( poolnum=560,lcdurl="https://lcd.osmosis.zone") {
 
 },
 getprice: async function( token="ustc", apiurl = "https://api.osmosis.zone") {
-  return fetchjson(apiurl, "/tokens/v2/price/", token)
+  return fetchjson(apiurl, "/tokens/v2/price/", token).then(i=>i.price)
 } 
 //osmotoustcroute = [{poolId: poolids['osmo/ustc'], tokenOutDenom: ibctokens.ustc}]
 

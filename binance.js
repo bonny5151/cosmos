@@ -22,8 +22,25 @@ waitForDeposit: async function(coin, txId, b = binance) {
   if(dep.status == 1  || dep.status==6) {
      return dep
   }  
-  
 }
+,
+balance: async function (coin, b=binance) {
+ var d = await b.userAsset()
+ if(d.data) {
+  return d.data.find(i=>i.asset==coin.toUpperCase())
+ } return {}
+  
+},
+price: async function (symbol, b=binance) {
+  var d = await b.avgPrice(symbol)
+  if(d.data) {
+    return d.data.price
+  }
+ return -1
+
+}
+
+
 /*
 
 {
