@@ -7,10 +7,15 @@
 
  }
 
-osmorpc = "https://rpc-osmosis.whispernode.com"
-cosmrpc = "https://rpc.cosmos.dragonstake.io"
+osmorpc2 = "https://rpc-osmosis.whispernode.com"
+cosmrpc2 = "https://rpc.cosmos.dragonstake.io"
 //"https://rpc-cosmoshub.ecostake.com"
-
+osmorpc = "https://rpc.osmosis.zone"
+cosmrpc3 = "https://rpc.cosmos.network"
+cosmrpc = "https://rpc-cosmoshub.ecostake.com"
+cosmrpc4 = "https://rpc.cosmoshub.strange.love"
+cosmrpc = "https://rpc-cosmoshub-ia.cosmosia.notional.ventures/"
+cosmrpc5 = "https://cosmos-rpc.icycro.org"
  ibctokens =  {
    atom : "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
    ustc : "ibc/BE1BB42D4BE3C30D50B68D7C41DB4DFCE9678E8EF8C539F6E6A9345048894FCC",
@@ -19,15 +24,17 @@ cosmrpc = "https://rpc.cosmos.dragonstake.io"
 }
 
  channels = {
-"atom" : { "osmosistocosmos" : "channel-0", "cosmostoosmosis" : "channel-141"},
-"ustc" : { "osmosistoterra" : "channel-71"}
+"atom" : { "o2c" : "channel-0", "c2o" : "channel-141"},
+"ustc" : { "o2t" : "channel-71"}
 
 
 }
 
 var poolids = {
  "osmo/ustc" : 560,
- "osmo/usdc" : 678
+ "osmo/usdc" : 678,
+ "atom/osmo" : 1
+
 }
 
 
@@ -96,6 +103,13 @@ getfee: function getfee(gaslimit=100000, gasprice="0.025", token="uatom") {
    token = token ? token : "uatom"
    return cosmlib.g.calculateFee(gaslimit, cosmlib.g.GasPrice.fromString(gasprice + token))
 } ,
+getfeeibc: function(maxamount="1000", token=ibctokens.atom, gaslimit=250000, gasprice="0.025") 
+{
+  var f= this.getfee(gaslimit,gasprice)
+  f.amount[0].denom = token
+  f.amount[0].amount = maxamount + ""
+  return f
+},
 coins: function coins(amount, token) {
   return cosmlib.a.coins(amount, token)
 },
@@ -139,9 +153,19 @@ sendibctokens: async function sendibctokens(connection, toaddress, tokens, destc
 {
  var feetoken = this.getfeetoken(connection)
  tokens = Array.isArray(tokens) ? tokens[0] : tokens
- var fee1 = this.getfee(250000, "0.025", feetoken)
+ var fee1 =  this.getfee(250000, "0.025", feetoken)
  return connection.sendIbcTokens(connection.signer.address, toaddress, tokens, "transfer", destchannel, "", Math.floor(Date.now() / 1000) + 60, fee1)
 
+},
+
+sendibctokens2: async function(obj) {
+  var connection = obj.connection
+  var toaddr = obj.to
+  var amount = obj.amount
+  var token = obj.token.toLowerCase()
+  var channel = obj.channel
+  if(token == "atom" || token =="osmo" ) { token = "u" + token}
+  var coins = this.coins(amount, token)
 },
 sendtokens: async function sendtokens(connection, toaddress, tokens, memo="")
 {
@@ -150,14 +174,22 @@ sendtokens: async function sendtokens(connection, toaddress, tokens, memo="")
   tokens = Array.isArray(tokens) ? tokens : [tokens]
   return connection.sendTokens(connection.signer.address, toaddress, tokens, fee1, memo)
 },
-swaposmosis: async function swaposmosis(connection, route,inputtokens, minoutputamount)
+swaposmosis: async function swaposmosis(connection, route,inputtokens, minoutputamount, fee)
 {
    var addr = connection.signer.address      
-   var fee1 = this.getfee(250000, "0.025", this.getfeetoken(connection))
+   var fee1 =fee? fee : this.getfee(250000, "0.025",  this.getfeetoken(connection))
    inputtokens = Array.isArray(inputtokens) ?  inputtokens[0] : inputtokens
    var msg = cosmlib.cosmology.messages.swapExactAmountIn({sender: addr, routes: route, tokenIn: inputtokens , tokenOutMinAmount: minoutputamount})
    return connection.signAndBroadcast(addr, [msg], fee1)
 },
+swaposmosis2: async function(obj) {
+  var connection = obj.connection
+  var route = getroute(obj.route)
+  var inputtokens = obj.input
+  var minoutput = obj.minoutput
+  var fee = obj.fee
+//  return this.swaposmosis(connection, route, inputtokens, minoutput
+}
 getroute: getroute,
 getpool: async function( poolnum=560,lcdurl="https://lcd.osmosis.zone") {
   return fetchjson(lcdurl,  "osmosis/gamm/v1beta1/pools/" , poolnum)
@@ -165,7 +197,13 @@ getpool: async function( poolnum=560,lcdurl="https://lcd.osmosis.zone") {
 },
 getprice: async function( token="ustc", apiurl = "https://api.osmosis.zone") {
   return fetchjson(apiurl, "/tokens/v2/price/", token).then(i=>i.price)
-} 
+} ,
+
+balance: async function( connection, addr) {
+   addr = addr ? addr : connection.signer.address
+   return connection.getAllBalances(addr)
+  
+}
 //osmotoustcroute = [{poolId: poolids['osmo/ustc'], tokenOutDenom: ibctokens.ustc}]
 
 
