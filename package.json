@@ -23,6 +23,7 @@
     "@terra-money/terra.js": "^3.1.4",
     "isomorphic-fetch": "^3.0.0",
     "kucoin-node-sdk": "^1.0.4",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.6.7",
+    "ethers": "^5.5.1"
   }
 }

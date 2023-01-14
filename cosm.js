@@ -16,24 +16,28 @@ cosmrpc = "https://rpc-cosmoshub.ecostake.com"
 cosmrpc4 = "https://rpc.cosmoshub.strange.love"
 cosmrpc = "https://rpc-cosmoshub-ia.cosmosia.notional.ventures/"
 cosmrpc5 = "https://cosmos-rpc.icycro.org"
+terrarpc="https://rpc-terra-ia.cosmosia.notional.ventures/"
+
  ibctokens =  {
    atom : "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
    ustc : "ibc/BE1BB42D4BE3C30D50B68D7C41DB4DFCE9678E8EF8C539F6E6A9345048894FCC",
-   usdc : "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858"
+   usdc : "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+   lunc: "ibc/0EF15DF2F02480ADE0BB6E85D9EBB5DAEA2836D3860E9F97F9AADE4F57A31AA0"
 
 }
 
  channels = {
 "atom" : { "o2c" : "channel-0", "c2o" : "channel-141"},
-"ustc" : { "o2t" : "channel-71"}
-
+"ustc" : { "o2t" : "channel-71"},
+"lunc" : {"o2t": "channel-72"}
 
 }
 
 var poolids = {
  "osmo/ustc" : 560,
  "osmo/usdc" : 678,
- "atom/osmo" : 1
+ "atom/osmo" : 1,
+ "lunc/osmo" : 800
 
 }
 
@@ -140,8 +144,9 @@ connectrpc: async function connectrpc(wallet, rpcurl)
    return cosmlib.g.SigningStargateClient.connectWithSigner(rpcurl, wallet)
 },
 connectterra: async function(terrawallet1) {
- var t = await cosmlib.g.SigningStargateClient.connectWithSigner("https://terra-rpc.easy2stake.com:443",terrawallet1)
+ var t = await cosmlib.g.SigningStargateClient.connectWithSigner(terrarpc,terrawallet1)
  t.address = terrawallet1.key.accAddress
+ t.signer.address = t.address
  return t
 } , 
 getfeetoken: function getfeetoken(connection) {
@@ -149,11 +154,11 @@ getfeetoken: function getfeetoken(connection) {
   address = address.toLowerCase()
   return address.startsWith("osmo") ? "uosmo" : "uatom"
 },
-sendibctokens: async function sendibctokens(connection, toaddress, tokens, destchannel)
+sendibctokens: async function sendibctokens(connection, toaddress, tokens, destchannel, fee)
 {
  var feetoken = this.getfeetoken(connection)
  tokens = Array.isArray(tokens) ? tokens[0] : tokens
- var fee1 =  this.getfee(250000, "0.025", feetoken)
+ var fee1 =  fee ? fee : this.getfee(250000, "0.025", feetoken)
  return connection.sendIbcTokens(connection.signer.address, toaddress, tokens, "transfer", destchannel, "", Math.floor(Date.now() / 1000) + 60, fee1)
 
 },

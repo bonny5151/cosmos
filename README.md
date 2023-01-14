@@ -20,6 +20,7 @@ cosmk2 = " "
 https://github.com/binance/binance-connector-node
 
 
+https://github.com/osmosis-labs/assetlists/blob/main/osmosis-1/osmosis-1.assetlist.json
 
 https://github.com/osmosis-labs/assetlists/blob/main/osmosis-1/osmosis-frontier.assetlist.json
 
