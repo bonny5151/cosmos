@@ -65,7 +65,8 @@ await terra.balance(tw, tw2.address)
 
 
 //swap osmo to lunc osmosis
-s = await c.swaposmosis(owc,c.getroute(['osmo','lunc']),c.coins(5000000,"uosmo"), "1000")}}
+s = await c.swaposmosis(owc,c.getroute(['osmo','lunc']),c.coins(5000000,"uosmo"), "1000")
+
 await c.getprice("lunc")
 await c.balance(owc)
 
@@ -73,6 +74,7 @@ await c.balance(owc)
 ff =c.getfeeibc(az(1000,6),ibctokens.atom)
 ff =c.getfeeibc(az(1000,6),ibctokens.lunc)
 
+s = await c.swaposmosis(owc,c.getroute(['atom','osmo']),c.coins(5000,ibctokens.atom), "1000", ff)
 
 //send lunc ibc from osmosis to terra, 
 f1 = await c.sendibctokens(owc, tw.address , c.coins(az(2000,6),ibctokens.lunc), "channel-72")
@@ -113,9 +115,3 @@ await c.balance(twc)
 
 await c.balance(twc, tw.key.accAddress)
 
-//send lunc ibc from osmosis to terra
-
-ff = await c.sendibctokens(owc, tw.key.accAddress, c.coins(az(6000,6),ibctokens.lunc), "channel-72")
-ff = await c.sendibctokens(owc, twc.signer.address, c.coins(az(6000,6),ibctokens.lunc), "channel-72")
-
-f1 = await c.sendibctokens(tw2c, owc.signer.address , c.coins(az(5000,6),ibctokens.lunc), "channel-1", ff)
