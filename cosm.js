@@ -166,6 +166,7 @@ sendibctokens2: async function(obj) {
   var channel = obj.channel
   if(token == "atom" || token =="osmo" ) { token = "u" + token}
   var coins = this.coins(amount, token)
+ 
 },
 sendtokens: async function sendtokens(connection, toaddress, tokens, memo="")
 {
@@ -189,7 +190,7 @@ swaposmosis2: async function(obj) {
   var minoutput = obj.minoutput
   var fee = obj.fee
 //  return this.swaposmosis(connection, route, inputtokens, minoutput
-}
+},
 getroute: getroute,
 getpool: async function( poolnum=560,lcdurl="https://lcd.osmosis.zone") {
   return fetchjson(lcdurl,  "osmosis/gamm/v1beta1/pools/" , poolnum)
