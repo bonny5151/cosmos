@@ -15,3 +15,7 @@ num = function(i) {return Number.parseFloat(i)}
 //min = function(i,i1) { i = bn(i), i1 = bn1(i1) }
 az = addzeroes
 rz = removezeroes
+const crypto = require('crypto');
+randomstring = function(length =4 ) {
+return crypto.randomBytes(length).toString('hex');
+}
