@@ -4,8 +4,9 @@ require("./load.js")
 
 
 getsymbol = function(sym) {
-var sym = sym.replace("/","-").replace("_","-")
-if(sym.indexOf("-") == -1) { var sym1 = sym.substr(0,sym.length-4); var sym2 = sym.substr(-4,4); sym = sym1 + "-" + sym2; }
+var sym = sym.replace("/","-").replace("_","-").toUpperCase()
+var base = sym.indexOf("US") >=0 ? 4 : 3
+if(sym.indexOf("-") == -1) { var sym1 = sym.substr(0,sym.length-base); var sym2 = sym.substr((base * -1),base); sym = sym1 + "-" + sym2; }
 sym = sym.toUpperCase()
 console.log(sym)
 
