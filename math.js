@@ -34,8 +34,6 @@ fee = JSBI.BigInt(fee)
 }
 
 
-
-
 /**
 calc amount input necessary to bring the average price of trade to executionprice
 */
@@ -50,7 +48,35 @@ function calclimit(executionprice, inputreserve, outputreserve, fee = .998)
   return x
 }
 
+function newavgprice(prevamount, prevprice, newamount, newprice)
+{
+ return (prevprice * prevamount + newprice * newamount )/ (prevamount + newamount)
+}
 
+/**
+  
+  prevtotal, o.prevavg
+  newamount, o.newprice
+return: maxinput
+*/
+
+function profitable(prevtrade, newtrade, reservex, reservey, minprofit)
+{
+
+    var newamount = prevtrade.totalamount + newtrade.amount
+    var newavg = newavgprice(prevtrade.totalamount, prevtrade.avgprice, newtrade.amount, newtrade.price )
+
+    var executionprice = outputamount( reservex, reservey, newamount) / newamount
+    maxexecutionprice = newavg * minprofit
+   
+    if( executionprice < maxexecutionprice ) { return {totalamount: newamount, price : newavg}}
+    return 0
+
+}
+
+function updatetrade(trade, newamount){
+
+}
 
 function orderbook(asks, mintradeamount, maxtradeamount, minprofit, inputreserve, outputreserve, fee=.998)
 {
@@ -62,23 +88,33 @@ function orderbook(asks, mintradeamount, maxtradeamount, minprofit, inputreserve
      var avgprice = 0;
              maxexecutionprice = avgprice * (1 - minprofit)
 
+     var trade = {totalamount: 0, avgprice: 0}
      for(var i = 0; i < asks.length; i++)
      {
+        
          var a= ask[i]
          var price = a[0], amount = a[1]
         if(price >= maxexecutionprice) { break;}
-        if(totalamount=0) {avgprice  = price}
-        else {}
-        newamount = totalamount + amount
-        newavg = (prevavg * totalamount + price * amount )/ (totalamount + amount)
-        if(newamount < maxamount )
-       executionprice = outputamount( reservex, reservey, newamount) / y
-       if(executionprice < maxexecutionprice && newamount < maxamount) { newamount; avg = newavg;}
-       else {   
-            // find amountwithin current limit; 
-              break;
-        }
- 
+        
+        if(trade.totalamount=0) {trade.avgprice  = price}
+        if(profitable(trade, ask, reservex, reservey, minprofit)) {
+             updatetrade(trade, ask)
+         } else if(amount > 100 ) {
+             var prof = 0
+             var amount2 = 100;
+            while(amount2 < amount) {
+               if( profitable(trade, ask, reservex, reservey, minprofit, amount2) {
+                      prof++;
+                      amount2+=100
+                   //updatetrade(trade,{amount: 100, price} 
+                } 
+            }              
+            if(prof) { updatetrade(trade,amount2,ask.price)}
+           break;
+         } else {
+           break;
+            }
+       
      }
   
 
