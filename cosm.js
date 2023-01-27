@@ -7,6 +7,7 @@
 
  }
 
+ require("./math.js")
 osmorpc2 = "https://rpc-osmosis.whispernode.com"
 cosmrpc2 = "https://rpc.cosmos.dragonstake.io"
 //"https://rpc-cosmoshub.ecostake.com"
@@ -201,10 +202,28 @@ getpool: async function( poolnum=560,lcdurl="https://lcd.osmosis.zone") {
   return fetchjson(lcdurl,  "osmosis/gamm/v1beta1/pools/" , poolnum)
 
 },
+getpool2: async function(poolnum=560) {
+ var p = await this.getpool(poolnum)
+ var t = {}
+ var i1 = 0;
+ p.pool.pool_assets.map(i=>{ t[i.token.denom] =t[i1++] = i.token.amount;})
+return t
+},
 getprice: async function( token="ustc", apiurl = "https://api.osmosis.zone") {
   return fetchjson(apiurl, "/tokens/v2/price/", token).then(i=>i.price)
 } ,
-
+getoutputs: async function(inputs,inputtoken, pool, addzeroes=0)
+{
+  if(Number.isInteger(pool)) { 
+    pool = await this.getpool2(pool)
+  }
+  var p = pool
+  var inputreserve = p[inputtoken]
+  var outputreserve =  p[0] == inputreserve ? p[1] : p[0]
+  if(!Array.isArray(inputs)) {inputs = [inputs]} 
+  
+  return inputs.map(i=> outputamount(inputreserve,outputreserve, az(i,addzeroes)))
+},
 balance: async function( connection, addr) {
    addr = addr ? addr : connection.signer.address
    return connection.getAllBalances(addr)

@@ -19,6 +19,7 @@ cosmk2 = " "
 
 https://github.com/binance/binance-connector-node
 
+https://github.com/Kucoin/kucoin-node-sdk/
 
 https://github.com/osmosis-labs/assetlists/blob/main/osmosis-1/osmosis-1.assetlist.json
 
@@ -31,3 +32,5 @@ https://github.com/cosmology-finance/cosmology/tree/master/packages/core#swapexa
 https://cosmos.directory/osmosis
 
 http://docs.osmosis.zone/apis
+
+https://github.com/osmosis-labs/awesome#publicly-available-endpoints

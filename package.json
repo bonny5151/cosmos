@@ -21,9 +21,10 @@
     "@cosmjs/utils": "^0.28.10",
     "@cosmology/core": "^0.5.19",
     "@terra-money/terra.js": "^3.1.4",
+    "ethers": "^5.5.1",
     "isomorphic-fetch": "^3.0.0",
+    "jsbi": "^4.3.0",
     "kucoin-node-sdk": "^1.0.4",
-    "node-fetch": "^2.6.7",
-    "ethers": "^5.5.1"
+    "node-fetch": "^2.6.7"
   }
 }

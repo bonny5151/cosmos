@@ -38,6 +38,10 @@ price: async function (symbol, b=binance) {
   }
  return -1
 
+},
+
+orderbook: async function(symbol, depth=5, b=binance) {
+return b.depth(symbol, {limit: depth}).then(i=>i.data)
 }
 
 

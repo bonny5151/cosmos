@@ -3,10 +3,13 @@ k.init(require('../kc/config.js'));
 require("./load.js")
 
 
-getsymbol = function(sym) {
-var sym = sym.replace("/","-").replace("_","-").toUpperCase()
-var base = sym.indexOf("US") >=0 ? 4 : 3
-if(sym.indexOf("-") == -1) { var sym1 = sym.substr(0,sym.length-base); var sym2 = sym.substr((base * -1),base); sym = sym1 + "-" + sym2; }
+getsymbol = function(sym, sep = "-") {
+if(sym.length < 5) { sym = sym + "USDT"}
+var sym = sym.replace(/\W/g,sep).toUpperCase()
+var base = sym.endsWith("BTC") || sym.endsWith("ETH") ? 3 : 4;
+//if(sym.indexOf("-") == -1) { var sym1 = sym.substr(0,sym.length-base); var sym2 = sym.substr((base * -1),base); sym = sym1 + "-" + sym2; }
+if(sym.indexOf(sep) == -1) { var sym1 = sym.substr(0,sym.length-base); var sym2 = sym.substr(sym1.length); sym = sym1 + sep + sym2; }
+
 sym = sym.toUpperCase()
 console.log(sym)
 
@@ -18,7 +21,7 @@ var kclib = {
 balance: async function(t,account='', api=k) {
   if(!account) {account = "trade|main";}
   return api.rest.User.Account.getAccountsList().then(i=>
-      { if(!t) {return i;} return i.data.filter(i1=>i1.currency == t.toUpperCase() && i1.type.match(account)) }
+      { if(!t) {return i.data.filter(i1=>i1.balance!='0');} return i.data.filter(i1=>i1.currency == t.toUpperCase() && i1.type.match(account)) }
          )
 
 },
