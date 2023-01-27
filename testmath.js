@@ -7,7 +7,7 @@ if(Number(binanceprice) < cosmprice)
 {
  
 
- orderbook =  b.lib.orderbook('ustcbusd')
+ orderbook = await b.lib.orderbook('ustcbusd')
 
 p = await c.getpool2(560)
  osmopr = await c.getprice("osmo")

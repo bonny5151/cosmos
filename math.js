@@ -15,7 +15,24 @@ fee = JSBI.BigInt(fee)
   return outputAmount.toString()    
 }
 
+/**
+calc amount input necessary to bring the average price of trade to executionprice
+*/
+function calclimit(executionprice, inputreserve, outputreserve, fee = .998)
+{
+  var ep = executionprice
+  var xR = inputreserve
+  var yR = outputreserve
+  var a = ep / yR;
+  var b = ((ep * xR) / (yR * fee)) - 1
+  var x = Math.abs(b) / a
+  return x
+}
+
+
+
 module.exports = {
 
-outputamount: outputamount
+outputamount: outputamount,
+calclimit: calclimit
 }
