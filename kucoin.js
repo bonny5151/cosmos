@@ -1,5 +1,5 @@
 const k = require('kucoin-node-sdk');
-k.init(require('../kc/config.js'));
+k.init(require('../kc/config2.js'));
 require("./load.js")
 
 
@@ -26,6 +26,15 @@ balance: async function(t,account='', api=k) {
 
 },
 
+deposits: async function(api=k)
+{
+  return api.rest.User.Deposit.getDepositList().then(i=>i.data.items)
+
+},
+depositaddress: async function(sym, chain ={}) {
+   return k.rest.User.Deposit.getDepositAddress(sym.toUpperCase(), chain)
+},
+
 price: async function(sym, orderbookdepth = 20,  api=k) {
 sym = getsymbol(sym)
  var s = await kc.api.rest.Market.OrderBook.getLevel2_20(sym).then(i=>i.data)
@@ -43,22 +52,77 @@ avgprice: async function(sym, api=k) {
 },
 getsymbol: getsymbol,
 
-marketorder0: async function(sym,buysell, amount, api=k) {
-var aa = randomstring()
-sym = getsymbol(sym)
-return k.rest.Trade.Orders.postOrder({clientOid: aa, side: buysell, symbol: sym, type:'market'},{funds:amount})
+/**
+o.from o.to ="trade|main" o.amount, o.symbol
 
-}, 
+*/
+transfer: async function(o, api=k)
+{
+  var sym = o.symbol
+  var toaccount = o.to
+  var amount = o.amount
+   var r = randomstring(6)
+   var from  = toaccount== 'trade' ? 'main' : 'trade'
+   return api.rest.User.Account.innerTransfer(r,sym,from, toaccount, amount)
+},
+
+/**
+o.symbol, o.buysell, o.amount, o.amountsymbol || o.symbol2
+*/
+
+marketorder: async function(o,api=k) {
+
+var aa = randomstring()
+var sym = o.symbol
+
+sym = getsymbol(sym)
+var amountsym = o.amountsymbol || o.symbol2
+ amountsym=amountsym.toUpperCase()
+amountsym = amountsym ? amountsym : buysell=="sell" ? sym.substr(0,4) : sym.substr(-4)
+var amount = o.amount
+var buysell = o.buysell
+var t= {}
+
+if((sym.startsWith(amountsym))){
+
+//&& buysell=='sell' )|| (sym.endsWith(amountsym) && buysell=='buy')) { 
+//console.log("size")
+ t.size = amount
+} else {
+ //console.log("funds")
+  t.funds = amount
+}
+return k.rest.Trade.Orders.postOrder({clientOid: aa, side: buysell, symbol: sym, type:'market'},t)
+
+},
+
+ 
 getorder: async function(id) {
  return k.rest.Trade.Orders.getOrderByID(id)
 },
-marketorder: async function(sym, buysell, amount, api=k){
-return this.marketorder0(sym, buysell,amount, api).then(i=> this.getorder(i.data.orderId))
+/**
+o.symbol, o.buysell, o.amount, o.amountsymbol
+*/
+marketorder1: async function(o,api=k){
+
+return this.marketorder(o, api).then(i=> this.getorder(i.data.orderId))
 },
 sell: async function(sym, api=k) {
 
-}
+},
 
+/**
+o.symbol, o.amount, o.to|o.address, o.data
+data: { chain, memo}
+*/
+withdraw: async function (o, api=k){
+ var sym = o.symbol;
+ var amount = o.amount
+ var toaddr = o.to || o.address || o.addr
+console.log(toaddr)
+ var data = o.data || {}
+return api.rest.User.Withdrawals.applyWithdraw(sym.toUpperCase(),toaddr,amount,data)
+}
 
 }
 
