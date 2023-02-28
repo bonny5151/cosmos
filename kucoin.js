@@ -1,5 +1,5 @@
 const k = require('kucoin-node-sdk');
-k.init(require('../kc/config2.js'));
+k.init(require('../kc/config.js'));
 require("./load.js")
 
 
@@ -77,10 +77,11 @@ var sym = o.symbol
 
 sym = getsymbol(sym)
 var amountsym = o.amountsymbol || o.symbol2
+var buysell = o.buysell
+
  amountsym=amountsym.toUpperCase()
 amountsym = amountsym ? amountsym : buysell=="sell" ? sym.substr(0,4) : sym.substr(-4)
 var amount = o.amount
-var buysell = o.buysell
 var t= {}
 
 if((sym.startsWith(amountsym))){

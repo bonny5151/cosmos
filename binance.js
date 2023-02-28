@@ -42,9 +42,47 @@ price: async function (symbol, b=binance) {
 
 orderbook: async function(symbol, depth=5, b=binance) {
 return b.depth(symbol, {limit: depth}).then(i=>i.data)
+},
+
+transfer: async function(o, api=binance)
+{
+
+var to = o.to? o.to : "trade"
+
+var type = to.match(/trad|spot/) ? "FUNDING_MAIN" : to.match(/fund/) ? "MAIN_FUNDING" : to
+
+// MAIN_FUNDING Spot account transfer to Funding account
+//FUNDING_MAIN Funding account transfer to Spot account
+
+//You need to enable Permits Universal Transfer option for the API Key which requests this endpoint.
+
+
+return api.userUniversalTransfer(type, o.symbol.toUpperCase(),o.amount)
+//var t = {type: '', asset: symbol, amount: amt, timestamp: ""}
+},
+
+marketorder: async function(o,api=binance) {
+
+//var aa = randomstring()
+var sym = o.symbol.toUpperCase()
+
+//sym = getsymbol(sym)
+var amountsym = o.amountsymbol || o.symbol2
+ amountsym=amountsym.toUpperCase()
+var buysell = o.buysell.toUpperCase()
+amountsym = amountsym ? amountsym : buysell =="SELL" ? sym.substr(0,4) : sym.substr(-4)
+var amount = o.amount
+var t= {}
+
+if((sym.startsWith(amountsym))){
+
+ t.quantity = amount +""
+} else {
+t.quoteOrderQty = amount + ""
+ //console.lo
 }
-
-
+return api.newOrder(sym, buysell, 'MARKET', t)
+}
 /*
 
 {
@@ -62,6 +100,7 @@ return b.depth(symbol, {limit: depth}).then(i=>i.data)
   unlockConfirm: 15,
   walletType: 0
 }
+
 
 */
 
