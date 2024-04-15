@@ -7,7 +7,7 @@
 
  }
 
- require("./math.js")
+// require("./math.js")
 osmorpc2 = "https://rpc-osmosis.whispernode.com"
 cosmrpc2 = "https://rpc.cosmos.dragonstake.io"
 //"https://rpc-cosmoshub.ecostake.com"
